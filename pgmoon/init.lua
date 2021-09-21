@@ -231,15 +231,17 @@ do
     -- we wrap the conect method and not just the auth method because the auth
     -- method might close the connection upon auth failure. So to retry me must
     -- reconnect as well.
-    try_connect = function(self, pwd, usr)
+    try_connect = function(self, pwd, usr, db)
       self.password = pwd     -- set password to try in pg object
       self.user = usr         -- set username to try into pg object
+      self.database = db      -- set database name to try into pg object
       return self:_connect()  -- call original connect method
     end,
     connect = function(self)
       self._pwd_secret = self._pwd_secret or secret_cache(self.password)
       self._usr_secret = self._usr_secret or secret_cache(self.user)
-      local ok, err = Secrets:try(self.try_connect, self, self._pwd_secret, self._usr_secret)
+      self._database_secret = self._database_secret or secret_cache(self.database)
+      local ok, err = Secrets:try(self.try_connect, self, self._pwd_secret, self._usr_secret, self._database_secret)
       return ok, type(err) == "table" and tostring(err) or err
     end,
     settimeout = function(self, ...)
