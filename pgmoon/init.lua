@@ -401,8 +401,8 @@ do
               local server_cert = self.sock:getpeercertificate()
               pem, signature = server_cert:pem(), server_cert:getsignaturename()
             end
-            signature = signature:lower()
-            if signature:match("^md5") or signature:match("^sha1") or signature:match("sha1$") then
+            local sig_lower = signature:lower()
+            if sig_lower:match("^md5") or sig_lower:match("^sha1") or sig_lower:match("sha1$") or sig_lower:match("sha256$") then
               signature = "sha256"
             else
               local objects = require("resty.openssl.objects")
