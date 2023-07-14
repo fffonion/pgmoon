@@ -8,7 +8,7 @@ do
 end
 local unpack = table.unpack or unpack
 local DEBUG = false
-local VERSION = "1.16.1"
+local VERSION = "1.16.2"
 local _len
 _len = function(thing, t)
   if t == nil then
